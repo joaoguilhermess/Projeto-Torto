@@ -1,0 +1,271 @@
+Abrev. abreviatura.
+a. C. antes do Chrísto.
+Açor. termo açoreano.
+Adj. adjectivo.
+Adj. f. adjectivo feminino.
+Adv. adverbio.
+Afr. africano.
+Agr. termo de Agricultura.
+al. alemão.
+alat. alatinado.
+alt. al. alto alemão.
+alter. alteração.
+Anat. termo de Anatomia.
+Angl. Anglicismo.
+angl. sax. anglo saxão.
+Ant. termo antigo.
+ant. alt. al. antigo alto alemão.
+Anthrop. Anthropologia.
+apher. aphérese.
+ár. árabe.
+Arith. termo de Arithmética.
+art. def. artigo definido.
+Artilh. termo de Artilharia.
+as. termo asiático.
+Arm. termo de Armaria.
+Astrol. termo de Astrologia.
+aum. aumentativo.
+Bacter. termo de Bacteriologia.
+berb. berbere.
+Bibl. Nac. Bibliotheca Nacional.
+Biol. termo de Biologia.
+b. lat. baixo latim.
+borg. borgonhês.
+Bot. termo de Botânica.
+Bras. termo brasileiro.
+bret. bretão.
+Burl. termo burlesco.
+Caboverd. termo caboverdeano.
+car. caraíba.
+Carp. termo de Carpintaria.
+carth. carthaginês.
+cast. castelhano.
+celt. céltico.
+Cf. confira.
+chancell. chancellaria.
+Chapel. termo de Chapelaria.
+chil. chileno.
+chin. chinês.
+Chul. termo chulo.
+Chron. termo de Chronologia.
+Cir. termo de Cirurgia.
+cit. citado.
+comp. comparativo.
+conc. concani.
+cong. conguês.
+conj. conjuncção.
+Constr. termo de construcção.
+contr. contracção.
+corr. corruptela.
+Cp. compare.
+Cutel. termo de Cutelaria.
+xxiii
+Cyn. termo de Cynegética.
+def. defectivo.
+defin. definido.
+dem. deminutivo.
+demonstr. demonstrativo.
+der. derivado; derivação.
+des. desusado.
+deprec. depreciativo.
+diccion. diccionário; diccionarista,
+din. dinamarquês.
+doc. documento.
+eccles. ecclesiastico.
+Econ. polít. termo de Economia Política.
+ed. edição.
+egýp. egýpcio.
+Enol. termo de Enologia.
+Entom. termo de Entomologia.
+Equit. termo de Equitação.
+escand. escandinavo.
+escoc. escocês.
+Escol. termo escolar.
+Espir. termo de espiritismo.
+etym. etymologia.
+ex. exemplo.
+ext. em sentido extensivo.
+Extrem. extremenho.
+euphon. euphonia; euphónico.
+f. substantivo feminino.
+f. ou fol. fôlha.
+fam. família; termo ou expressão familiar.
+fem. flexão feminina.
+fig. em sentido figurado.
+Fin. termo de Finanças.
+flam. flamengo.
+flex. flexão.
+fr. francês.
+freq. verbo frequentativo.
+Gal. gallicismo.
+Gall. gallego.
+gên. gênero.
+Geneal. termo de Genealogia.
+Geod. termo de Geodesia.
+Geogr. termo de Geographia.
+Geol. termo de Geologia.
+Geom. termo de Geometria.
+germ. germânico.
+Gír. termo de gíria.
+Glot. termo de Glóttica.
+got. gótico.
+gr. grego.
+Gram. termo de Grammática.
+guar. guarani.
+hebr. hebreu.
+Heráld. termo de Heráldica.
+hind. hindustani.
+Hist. Nat. termo de Hist. Natural.
+holl. hollandês.
+hung. húngaro.
+hybr. hýbrido.
+Hydrogr. termo de Hydrographia.
+hyp. hypothético.
+Icht. termo de Ichthyologia.
+id. idem.
+imper. imperativo.
+impess. impessoal.
+impropr. em sentido impróprio.
+inch. verbo inchoativo.
+ind. termo indiano.
+inf. termo infantil.
+infl. influência.
+ingl. inglês.
+interj. interjeição.
+interrog. interrogação.
+iron. ironia.
+it. italiano.
+Ital. italianismo.
+jap. japonês.
+jav. javanês.
+Jur. termo de Jurisprudência.
+kilogr. kilogramma.
+lat. latim.
+lat. barb. latim bárbaro.
+lat. bot. latim botânico.
+lisb. lisboêta.
+Lit. Literatura.
+loc. locução.
+loc. adv. locução adverbial.
+loc. conj. locução conjunccional.
+loc. prep. locução prepositiva.
+loc. pron. locução pronominal.
+lund. lundês.
+m. substantivo masculino.
+Mad. termo da ilha da Madeira.
+mal. malaio.
+malab. malabárico.
+Marcen. termo de Marcenaria.
+Marn. termo de marnotos.
+Mathem. termo de Mathemática.
+Med. termo do Medicina.
+med. lat. médio latim
+metáth. metáthese.
+mex. mexicano.
+Mil. termo militar.
+Miner. termo de Mineralogia.
+mod. moderno.
+ms. manuscrito.
+Mús. termo de Música.
+myth. mythológico.
+n. nome.
+N. Norte.
+Náut. termo de Náutica.
+neerl. neerlandês.
+neol. neologismo.
+nord. nórdico.
+norm. normando.
+n. p. nome próprio.
+num. numeral.
+obsol. obsoleto.
+onom. onomatopeia; onomatopaico.
+Ópt. termo de Óptica.
+or. origem.
+Ornit. Ornithologia.
+xxiv
+orthogr. orthographia.
+p. página.
+part. particípio.
+part. irr. particípio irregular.
+Pathol. termo de Pathologia.
+pers. persa.
+peruv. peruviano.
+Pesc. termo de Pescaria.
+pess. pessôa (verbal).
+Pharm. termo de Pharmacia.
+Philol. termo de Philologia.
+Phot. termo de Photographia.
+Phýs. termo de Phýsica.
+Physiol. termo de Physiologia.
+Pint. termo de Pintura.
+pl. plural.
+pleb. plebeísmo.
+poet. termo poético.
+pol. polaco.
+pop. termo popular.
+port. português.
+pov. povoação.
+pref. prefixo.
+prep. preposição.
+pron. pronome.
+pron. ind. pronome indefinido.
+prop. próprio.
+prov. provincianismo.
+Prov. alent. provincianismo alentejano.
+Prov. alg. provincianismo algarvio.
+Prov. beir. provincianismo beirão.
+Prov. dur. provincianismo duriense.
+Prov. extr. provincianismo extremenho.
+Prov. minh. provincianismo minhoto.
+Prov. trasm. provincianismo trasmontano.
+provn. provençal.
+p. us. pouco usado.
+qual. qualificativo.
+quimb. quimbundo.
+rad. radical.
+refl. reflexo.
+restrict. em sentido restricto.
+rev. revista.
+S. Sul.
+Sal. termo de salinas.
+séc. século.
+seg. seguinte; seguido.
+sent. sentido.
+Serr. termo de Serralharia.
+sign. significação
+sing. singular.
+subst. substantivo.
+suf. suffixo.
+suf. v. suffixo verbal.
+sup. superlativo.
+Supplem. Supplemento.
+syr. syríaco.
+t. termo.
+Taur. termo da Tauromaquia.
+Terat. termo de Teratologia.
+Theol. termo de Theologia.
+thibet. thibetano.
+Topogr. termo de Topographia.
+turc. turco.
+unif. unifórme.
+us. usado.
+V. Veja.
+v. verbo.
+vasc. vasconço.
+vb. verbò.
+veloc. termo de velocipedia.
+ven. termo venatório.
+verb. verbal.
+vers. versificação.
+Veter. termo de Veterinária.
+v. g. verbi-gratia.
+v. i. verbo intransitivo.
+vin. termo de vinificação.
+Vit. termo de Vinicultura.
+vº versò.
+voc. vocábulo.
+v. p. ou v. pron.verbo pronominal.
+vulg. vulgar.
+v. t. verbo transitivo.
+zend. zenda.
+Zool. termo de Zoologia.
