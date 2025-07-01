@@ -38,8 +38,6 @@ bool verificarLetras(std::string palavra, std::string palavra2) {
 	int tamanho = palavra.length();
 	int tamanho2 = palavra2.length();
 
-	bool resultado = true;
-
 	for (int b = 0; b < tamanho2; b++) {
 		bool letra = false;
 
@@ -52,11 +50,9 @@ bool verificarLetras(std::string palavra, std::string palavra2) {
 		}
 
 		if (letra == false) {
-			break;
-
-			resultado = false;
+			return false;
 		}
 	}
 
-	return resultado;
+	return true;
 }

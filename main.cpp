@@ -2,36 +2,13 @@
 
 #include "util.h"
 
-// int main2() {
-// 	TPilha palavras = lerPalavras("./dicionarios/portugues.txt");
-
-// 	// imprimirPalavras(palavras);
-
-// 	for (int i = 0; i < 10; i++) {
-// 		TInfo item = pegarItem(palavras, inteiroAleatorio(0, palavras.quantidade), true);
-
-// 		std::cout << "Palavra: " << item.palavra;
-// 		std::cout << "\n";
-
-// 		// item.palavra = "amar";
-
-// 		// std::cout << "Verificar: " << (verificarPalavra(palavras, item) ? "Encontrada" : "Não Encontrada");
-// 		// std::cout << "\n";
-
-// 		embaralharPalavra(item);
-
-// 		std::cout << "Palavra: " << item.palavra;
-// 		std::cout << "\n";
-// 	}
-
-// 	return 0;
-// }
-
 #define MAX_PONTOS 100
 #define MIN_PONTOS 25
 
 int main() {
-	TPilha palavras = lerPalavras("./dicionarios/portugues.txt");
+	system("color f0");
+
+	TPilha palavras = lerPalavras("./dicionarios/verbos.txt");
 
 	std::string digitada = "";
 
@@ -39,7 +16,13 @@ int main() {
 
 	int pontos = 0;
 
+	TPilha historico = criarPilha();
+
+	TInfo item;
+
 	while (true) {
+		system("cls");
+
 		TInfo sorteada = pegarItem(palavras, inteiroAleatorio(0, palavras.quantidade), true);
 
 		if (sorteada.palavra == "") {
@@ -51,45 +34,78 @@ int main() {
 
 		std::string embaralhada = embaralharPalavra(sorteada.palavra);
 
-		std::cout << "Nivel: " << nivel;
-		std::cout << "\n";
-
-		std::cout << "Pontos: " << pontos;
-		std::cout << "\n";
-
-		std::cout << "Palavra Original: " << sorteada.palavra;
-		std::cout << "\n";
-
-		std::cout << "Embaralhada: " << embaralhada;
-		std::cout << "\n";
-
 		while (true) {
-			std::cout << "Palavra: ";
+			while (true) {
+				system("cls");
 
-			std::cin >> digitada;
+				// std::cout << "Projeto Torto";
+				// std::cout << "\n";
 
-			formatarPalavra(digitada);
-
-			paraMinuscula(digitada);
-
-			if (!verificarLetras(embaralhada, digitada)) {
-				std::cout << "Erro: Palavra Invalida";
+				std::cout << "Historico:";
 				std::cout << "\n";
-			} else {
+
+				imprimirPalavras(historico);
+
+				std::cout << "\n";
+
+				std::cout << "Nivel: " << nivel;
+				std::cout << "\n";
+
+				std::cout << "Pontos: " << pontos;
+				std::cout << "\n";
+				
+				std::cout << "\n";
+
+				// std::cout << "Palavra Original: " << sorteada.palavra;
+				// std::cout << "\n";
+
+				std::cout << "Embaralhada: " << embaralhada;
+				std::cout << "\n";
+
+				std::cout << "\n";
+
+				std::cout << "Palavra: ";
+
+				std::cin >> digitada;
+
+				formatarPalavra(digitada);
+
+				paraMinuscula(digitada);
+
+				if (digitada == ".fechar") {
+					break;
+				}
+
+				if (!verificarLetras(embaralhada, digitada) || verificarPalavra(historico, digitada)) {
+					std::cout << "Erro: Palavra Invalida";
+					std::cout << "\n";
+				} else {
+					break;
+				}
+			}
+
+			if (digitada == sorteada.palavra) {
+				pontos += MAX_PONTOS;
+
+				nivel += 1;
+
+				break;
+			} else if (verificarPalavra(palavras, digitada)) {
+				pontos += inteiroAleatorio(MIN_PONTOS, MAX_PONTOS);
+
+				item.palavra = digitada;
+
+				adicionarItem(historico, item);				
+			} else if (digitada == ".fechar") {
 				break;
 			}
 		}
 
-		if (digitada == sorteada.palavra) {
-			pontos += MAX_PONTOS;
+		while (!pilhaVazia(historico)) {
+			removerItem(historico);
+		}
 
-			nivel += 1;
-
-			std::cout << "Parabens!";
-			std::cout << "\n";
-		} else if (verificarPalavra(palavras, digitada)) {
-			pontos += inteiroAleatorio(MIN_PONTOS, MAX_PONTOS);
-		} else if (digitada == "") {
+		if (digitada == ".fechar") {
 			break;
 		}
 	}
