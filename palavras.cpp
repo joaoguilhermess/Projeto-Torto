@@ -159,17 +159,19 @@ void imprimirPalavras(TPilha& pilha) {
 	std::cout << "\n";
 }
 
-void embaralharPalavra(TInfo& item) {
-	int tamanho = item.palavra.length();
+std::string embaralharPalavra(std::string palavra) {
+	int tamanho = palavra.length();
 
-	for (int i = 0; i < tamanho; i++) {
-		int index = inteiroAleatorio(i, tamanho);
+	for (int i = 0; i < tamanho - 1; i++) {
+		int index = inteiroAleatorio(i + 1, tamanho);
 
-		item.palavra = item.palavra.substr(index, 1) + item.palavra.substr(0, index) + item.palavra.substr(index + 1);
+		palavra = palavra.substr(index, 1) + palavra.substr(0, index) + palavra.substr(index + 1);
 	}
+
+	return palavra;
 }
 
-bool verificarPalavra(TPilha& pilha, TInfo& item) {
+bool verificarPalavra(TPilha& pilha, std::string palavra) {
 	TPilha pilha2 = criarPilha();
 
 	TInfo item2;
@@ -179,7 +181,7 @@ bool verificarPalavra(TPilha& pilha, TInfo& item) {
 	while (!pilhaVazia(pilha)) {
 		item2 = pegarItem(pilha);
 
-		if (item2.palavra == item.palavra) {
+		if (item2.palavra == palavra) {
 			resultado = true;
 
 			break;
