@@ -53,7 +53,7 @@ TInfo pegarItem(TPilha& pilha) {
 	return item;
 }
 
-TInfo pegarItem(TPilha& pilha, int index) {
+TInfo pegarItem(TPilha& pilha, int index, bool remover) {
 	TPilha pilha2 = criarPilha();
 
 	TInfo item;
@@ -61,11 +61,15 @@ TInfo pegarItem(TPilha& pilha, int index) {
 	item.palavra = "";
 
 	if (index >= 0 && index < pilha.quantidade) {
-		while (pilha.quantidade > index) {
-			item = pegarItem(pilha);
+		while (pilha.quantidade - 1 > index) {
+			adicionarItem(pilha2, pegarItem(pilha));
 
-			adicionarItem(pilha2, item);
+			removerItem(pilha);
+		}
 
+		item = pegarItem(pilha);
+
+		if (remover) {
 			removerItem(pilha);
 		}
 
@@ -122,7 +126,7 @@ TPilha lerPalavras(std::string caminho) {
 	TInfo item;
 
 	while (getline(arquivo, item.palavra)) {
-		// if (pilha.quantidade < 10) adicionarItem(pilha, item);
+		// if (pilha.quantidade < 3) adicionarItem(pilha, item);
 		adicionarItem(pilha, item);
 	}
 
@@ -135,8 +139,6 @@ void imprimirPalavras(TPilha& pilha) {
 	TPilha pilha2 = criarPilha();
 
 	TInfo item;
-
-	int quantidade = pilha.quantidade;
 
 	while (!pilhaVazia(pilha)) {
 		item = pegarItem(pilha);
@@ -153,6 +155,48 @@ void imprimirPalavras(TPilha& pilha) {
 
 	pilha = pilha2;
 
-	std::cout << "Quantidade: " << quantidade;
+	std::cout << "Quantidade: " << pilha.quantidade;
 	std::cout << "\n";
+}
+
+void embaralharPalavra(TInfo& item) {
+	int tamanho = item.palavra.length();
+
+	for (int i = 0; i < tamanho; i++) {
+		int index = inteiroAleatorio(i, tamanho);
+
+		item.palavra = item.palavra.substr(index, 1) + item.palavra.substr(0, index) + item.palavra.substr(index + 1);
+	}
+}
+
+bool verificarPalavra(TPilha& pilha, TInfo& item) {
+	TPilha pilha2 = criarPilha();
+
+	TInfo item2;
+
+	bool resultado = false;
+
+	while (!pilhaVazia(pilha)) {
+		item2 = pegarItem(pilha);
+
+		if (item2.palavra == item.palavra) {
+			resultado = true;
+
+			break;
+		}
+
+		adicionarItem(pilha2, item2);
+
+		removerItem(pilha);
+	}
+
+	while (!pilhaVazia(pilha2)) {
+		adicionarItem(pilha, pegarItem(pilha2));
+
+		removerItem(pilha2);
+	}
+
+	deletarPilha(pilha2);	
+
+	return resultado;
 }

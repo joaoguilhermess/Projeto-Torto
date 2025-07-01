@@ -4,6 +4,8 @@
 	#include <iostream>
 	#include <fstream>
 
+	#include "util.h"
+
 	struct TInfo {
 		std::string palavra;
 	};
@@ -23,11 +25,11 @@
 
 	bool pilhaVazia(TPilha& pilha);
 
-	void adicionarItem(TPilha& pilha);
+	void adicionarItem(TPilha& pilha, TInfo item);
 
 	TInfo pegarItem(TPilha& pilha);
 
-	TInfo pegarItem(TPilha& pilha, int index);
+	TInfo pegarItem(TPilha& pilha, int index, bool remover);
 
 	void removerItem(TPilha& pilha);
 
@@ -36,4 +38,8 @@
 	TPilha lerPalavras(std::string caminho);
 
 	void imprimirPalavras(TPilha& pilha);
+
+	void embaralharPalavra(TInfo& item);
+
+	bool verificarPalavra(TPilha& pilha, TInfo& item);
 #endif

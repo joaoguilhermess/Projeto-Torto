@@ -1,31 +1,37 @@
 #include "palavras.h"
-#include <random>
 
-std::random_device device;
-std::mt19937 seed(device());
-std::uniform_real_distribution<> generate(0.0, 1.0);
+#include "util.h"
 
-int inteiroAleatorio(int min, int max) {
-	return (max - min) * generate(seed) + min;
-}
+int main2() {
+	TPilha palavras = lerPalavras("./dicionarios/portugues.txt");
 
-void embaralharPalavra(TInfo& item) {
-	for (int i = 0; i < item.palavra.length(); i++) {
-		int index = inteiroAleatorio(i, item.palavra.length());
+	// imprimirPalavras(palavras);
 
-		item.palavra = item.palavra.substr(index, 1) + item.palavra.substr(0, index) + item.palavra.substr(index + 1);
+	for (int i = 0; i < 10; i++) {
+		TInfo item = pegarItem(palavras, inteiroAleatorio(0, palavras.quantidade), true);
+
+		std::cout << "Palavra: " << item.palavra;
+		std::cout << "\n";
+
+		// item.palavra = "amar";
+
+		// std::cout << "Verificar: " << (verificarPalavra(palavras, item) ? "Encontrada" : "Não Encontrada");
+		// std::cout << "\n";
+
+		embaralharPalavra(item);
+
+		std::cout << "Palavra: " << item.palavra;
+		std::cout << "\n";
 	}
+
+	return 0;
 }
 
 int main() {
 	TPilha palavras = lerPalavras("./dicionarios/portugues.txt");
 
-	// imprimirPalavras(palavras);
-
-	for (int i = 0; i < 25; i++) {
-		TInfo item = pegarItem(palavras, inteiroAleatorio(0, palavras.quantidade));
-
-		embaralharPalavra(item);
+	for (int i = 0; i < 10; i++) {
+		TInfo item = pegarItem(palavras, inteiroAleatorio(0, palavras.quantidade), true);
 
 		std::cout << "Palavra: " << item.palavra;
 		std::cout << "\n";
