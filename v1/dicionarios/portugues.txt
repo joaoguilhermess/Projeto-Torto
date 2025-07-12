@@ -1,0 +1,4 @@
+arroz
+feijao
+carne
+macarrao
