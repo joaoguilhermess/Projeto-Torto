@@ -4,6 +4,8 @@
 #include "palavras.h"
 #include "util.h"
 
+#include <filesystem>
+
 #define COR_BRANCO 255, 255, 255, 255
 #define COR_PRETO 0, 0, 0, 255
 #define COR_VERMELHO 255, 0, 0, 255
@@ -204,33 +206,6 @@ float desenharLetras(float offset, std::string letras, int tamanho, float tamanh
 	topo += LARGURA_BORDA;
 
 	return L;
-}
-
-std::string menuDicionario(bool &rodando) {
-	SDL_Event evento;
-
-	bool rodandoDicionario = true;
-
-	while (rodandoDicionario) {
-		mouseApertado = false;
-
-		while (SDL_PollEvent(&evento)) {
-			if (evento.type == SDL_EVENT_QUIT) {
-				rodandoDicionario = false;
-				rodando = false;
-			} else if (evento.type == SDL_EVENT_MOUSE_MOTION) {
-				SDL_GetMouseState(&mouseX, &mouseY);
-			} else if (evento.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-				mouseApertado = true;
-			}
-		}
-
-		SDL_GetWindowSize(janela, &larguraTela, &alturaTela);
-
-		limparTela();
-	}
-
-	return "./palavras/verbos.txt";
 }
 
 std::string getLetra(int code) {
@@ -447,6 +422,113 @@ void menuJogar(bool &rodando, std::string dicionario) {
 			removerItem(historico);
 		}
 	}
+
+	deletarPilha(palavrasOriginais);
+	deletarPilha(palavras);
+	deletarPilha(historico);
+}
+
+void menuDicionario(bool &rodando) {
+	SDL_Event evento;
+
+	TPilha dicionarios = criarPilha();
+
+	TInfo item;
+
+	std::string caminho = ".\\palavras\\";
+	std::string extensaoDicionario = ".txt";
+
+	for (std::filesystem::directory_entry arquivo : std::filesystem::directory_iterator(caminho)) {
+		std::string nome = arquivo.path().filename().string();
+
+		size_t extensao = nome.rfind(".");
+
+		if (extensao == std::string::npos) continue;
+		if (nome.substr(extensao) != ".txt") continue;
+
+		item.palavra = nome.substr(0, extensao);
+
+		adicionarItem(dicionarios, item);
+	}
+
+	bool rodandoDicionario = true;
+
+	while (rodandoDicionario) {
+		mouseApertado = false;
+
+		while (SDL_PollEvent(&evento)) {
+			if (evento.type == SDL_EVENT_QUIT) {
+				rodandoDicionario = false;
+				rodando = false;
+			} else if (evento.type == SDL_EVENT_MOUSE_MOTION) {
+				SDL_GetMouseState(&mouseX, &mouseY);
+			} else if (evento.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+				mouseApertado = true;
+			}
+		}
+
+		SDL_GetWindowSize(janela, &larguraTela, &alturaTela);
+
+		limparTela();
+
+		float topo = 0;
+		float base = alturaTela;
+		float esquerda = 0;
+
+		esquerda += ESPACAMENTO + ESPACAMENTO;
+
+		desenharTitulos(topo, base);
+
+		TPilha dicionarios2 = criarPilha();
+
+		float k = (base - ESPACAMENTO - topo - (dicionarios.quantidade * (ESPACAMENTO + FONTE_GRANDE + ESPACAMENTO))) / (dicionarios.quantidade + 1);
+
+		while (!pilhaVazia(dicionarios)) {
+			topo += k;
+
+			item = pegarItem(dicionarios);
+
+			adicionarItem(dicionarios2, item);
+
+			removerItem(dicionarios);
+
+			bool mouseDentro2 = false;
+
+			desenharBotao(ESQUERDA, item.palavra, fonteGrande, esquerda, topo, ESPACAMENTO, FONTE_GRANDE, mouseDentro2);
+
+			if (mouseDentro2 && mouseApertado) {
+				mouseApertado = false;
+			
+				menuJogar(rodando, caminho + item.palavra + extensaoDicionario);
+			}
+
+			topo += ESPACAMENTO + FONTE_GRANDE + ESPACAMENTO;
+		}
+
+		while (!pilhaVazia(dicionarios2)) {
+			adicionarItem(dicionarios, pegarItem(dicionarios2));
+
+			removerItem(dicionarios2);
+		}
+
+		deletarPilha(dicionarios2);
+
+		bool mouseDentro = false;
+
+		base -= ESPACAMENTO + LARGURA_BORDA + FONTE_GRANDE + ESPACAMENTO + ESPACAMENTO;
+
+		desenharBotao(DIREITA, "Voltar", fonteGrande, larguraTela - ESPACAMENTO - ESPACAMENTO, base, ESPACAMENTO, FONTE_GRANDE, mouseDentro);
+
+		if (mouseDentro && mouseApertado) {
+			mouseApertado = false;
+
+			rodandoDicionario = false;
+		}
+
+		SDL_RenderPresent(renderTela);
+	}
+
+	deletarPilha(dicionarios);
 }
 
 void menuAjuda(bool &rodando) {
@@ -477,11 +559,11 @@ void menuAjuda(bool &rodando) {
 
 		desenharTitulos(topo, base);
 
-		escreverTexto(ESQUERDA, "Objetivos do Jogo", fonteMedia, ESPACAMENTO + ESPACAMENTO, topo);
+		escreverTexto(ESQUERDA, "Objetivos Do Jogo", fonteMedia, ESPACAMENTO + ESPACAMENTO, topo);
 
 		topo += FONTE_MEDIA + ESPACAMENTO;
 
-		escreverTexto(ESQUERDA, "Ensinar Novas Palavras em Português ou Inglês e Seus Significados ao Jogador.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
+		escreverTexto(ESQUERDA, "Ensinar Novas Palavras Em Português Ou Inglês E Seus Significados Ao Jogador.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
 	
 		topo += FONTE_PEQUENA + ESPACAMENTO + ESPACAMENTO;
 
@@ -489,15 +571,23 @@ void menuAjuda(bool &rodando) {
 		
 		topo += FONTE_MEDIA + ESPACAMENTO;
 
-		escreverTexto(ESQUERDA, "Jogue o Jogo Usando as Teclas Alfabéticas do seu Teclado.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
+		escreverTexto(ESQUERDA, "Usando As Teclas Alfabéticas Do Seu Teclado.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
+		
+		topo += FONTE_PEQUENA + ESPACAMENTO;
+
+		escreverTexto(ESQUERDA, "Tente Adivinhar Qual Palavra É A Palavra Sorteada.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
+		
+		topo += FONTE_PEQUENA + ESPACAMENTO;
+		
+		escreverTexto(ESQUERDA, "Isso Tudo Antes De Acabar O Tempo De 60 Segundos.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
 
 		topo += FONTE_PEQUENA + ESPACAMENTO;
 
-		escreverTexto(ESQUERDA, "Use ENTER para Submeter a Palavra Digitada.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
+		escreverTexto(ESQUERDA, "Use ENTER Para Submeter A Palavra Digitada.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
 
 		topo += FONTE_PEQUENA + ESPACAMENTO;
 
-		base -= FONTE_GRANDE + ESPACAMENTO + ESPACAMENTO + ESPACAMENTO;
+		base -= ESPACAMENTO + LARGURA_BORDA + FONTE_GRANDE + ESPACAMENTO + ESPACAMENTO;
 
 		bool mouseDentro = false;
 
@@ -517,9 +607,9 @@ int main() {
 	if (!iniciarSDL()) return 1;
 
 	std::string menus[3] = {
-		"JOGAR",
-		"AJUDA",
-		"SAIR"
+		"Jogar",
+		"Ajuda",
+		"Sair"
 	};
 
 	std::string participantes[4] = {
@@ -552,8 +642,11 @@ int main() {
 
 		float topo = 0;
 		float base = alturaTela;
+		float esquerda = 0;
 
 		desenharTitulos(topo, base);
+
+		esquerda += ESPACAMENTO + ESPACAMENTO;
 
 		float k = (base - ESPACAMENTO - topo - (3 * (ESPACAMENTO + FONTE_GRANDE + ESPACAMENTO))) / (3 + 1);
 
@@ -562,7 +655,7 @@ int main() {
 
 			bool mouseDentro = false;
 
-			desenharBotao(ESQUERDA, menus[i], fonteGrande, ESPACAMENTO + ESPACAMENTO, topo, ESPACAMENTO, FONTE_GRANDE, mouseDentro);
+			desenharBotao(ESQUERDA, menus[i], fonteGrande, esquerda, topo, ESPACAMENTO, FONTE_GRANDE, mouseDentro);
 
 			if (mouseDentro && mouseApertado) {
 				mouseApertado = false;
@@ -570,11 +663,7 @@ int main() {
 				limparTela();
 
 				if (i == 0) {
-					std::string dicionario = menuDicionario(rodando);
-
-					if (dicionario != "") {
-						menuJogar(rodando, dicionario);
-					}
+					menuDicionario(rodando);
 				} else if (i == 1) {
 					menuAjuda(rodando);
 				} else if (i == 2) {

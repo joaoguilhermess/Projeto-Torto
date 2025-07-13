@@ -8,6 +8,7 @@
 
 	struct TInfo {
 		std::string palavra;
+		std::string significado;
 	};
 
 	struct TNodo {
