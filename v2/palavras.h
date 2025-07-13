@@ -35,7 +35,7 @@
 
 	void deletarPilha(TPilha& pilha);
 
-	TPilha lerPalavras(std::string caminho);
+	TPilha lerPalavras(std::string caminho, int maximoLetras);
 
 	void imprimirPalavras(TPilha& pilha);
 

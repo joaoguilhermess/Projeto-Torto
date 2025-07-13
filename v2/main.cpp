@@ -2,13 +2,13 @@
 #include <SDL3_ttf/SDL_ttf.h>
 
 #include "palavras.h"
-#include <string>
+#include "util.h"
 
 #define COR_BRANCO 255, 255, 255, 255
 #define COR_PRETO 0, 0, 0, 255
 #define COR_VERMELHO 255, 0, 0, 255
 
-#define ZOOM 1
+#define ZOOM 1.6
 
 #define ESPACAMENTO 50 / ZOOM
 #define LARGURA_BORDA 2
@@ -24,6 +24,9 @@ int alturaTela = 0;
 #define ESQUERDA 0
 #define MEIO 1.0f / 2
 #define DIREITA 1
+
+#define MAX_PONTOS 100
+#define MIN_PONTOS 25
 
 SDL_Window* janela;
 SDL_Renderer* renderTela;
@@ -45,7 +48,7 @@ void desenharRetangulo(float x, float y, float largura, float altura) {
 	SDL_RenderFillRect(renderTela, &retangulo);
 }
 
-void escreverTexto(float offset, std::string conteudo, TTF_Font* fonte, float x, float y) {
+float escreverTexto(float offset, std::string conteudo, TTF_Font* fonte, float x, float y) {
 	TTF_Text* texto = TTF_CreateText(renderTexto, fonte, conteudo.c_str(), 0);
 
 	TTF_SetTextColor(texto, COR_PRETO);
@@ -58,9 +61,11 @@ void escreverTexto(float offset, std::string conteudo, TTF_Font* fonte, float x,
 	TTF_DrawRendererText(texto, x - (largura * offset), y - (TTF_GetFontSize(fonte) / 3));
 
 	TTF_DestroyText(texto);
+
+	return largura;
 }
 
-void desenharBotao(float offset, std::string conteudo, TTF_Font* fonte, float x, float y, float espacamento, int tamanho, bool &mouseDentro) {
+float desenharBotao(float offset, std::string conteudo, TTF_Font* fonte, float x, float y, float espacamento, float tamanho, bool &mouseDentro) {
 	TTF_Text* texto = TTF_CreateText(renderTexto, fonte, conteudo.c_str(), 0);
 
 	int largura;
@@ -95,13 +100,15 @@ void desenharBotao(float offset, std::string conteudo, TTF_Font* fonte, float x,
 	TTF_DrawRendererText(texto, x + espacamento, y - (TTF_GetFontSize(fonte) / 3) + espacamento);
 
 	TTF_DestroyText(texto);
+
+	return L;
 }
 
 bool iniciarSDL() {
 	if (!SDL_Init(SDL_INIT_VIDEO) || !TTF_Init()) return false;
 
-	janela = SDL_CreateWindow("Jogo Torto", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_FULLSCREEN);
-	// janela = SDL_CreateWindow("Jogo Torto", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+	// janela = SDL_CreateWindow("Jogo Torto", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_FULLSCREEN);
+	janela = SDL_CreateWindow("Jogo Torto", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
 	renderTela = SDL_CreateRenderer(janela, NULL);
 	renderTexto = TTF_CreateRendererTextEngine(renderTela);
 
@@ -141,7 +148,7 @@ void fecharSDL() {
 	SDL_Quit();
 }
 
-void desenharTitulos(int &topo, int &base) {
+void desenharTitulos(float &topo, float &base) {
 	topo += ESPACAMENTO;
 
 	SDL_SetRenderDrawColor(renderTela, COR_PRETO);
@@ -165,12 +172,14 @@ void desenharTitulos(int &topo, int &base) {
 	topo += ESPACAMENTO;	
 }
 
-void desenharLetras(std::string letras, float tamanhoFonte, int &topo) {
-	int tamanho = letras.length();
+float desenharLetras(float offset, std::string letras, int tamanho, float tamanhoFonte, float x, float &topo) {
+	float k = tamanhoFonte * 1.6;
 
-	int k = tamanhoFonte * 1.6;
+	SDL_SetRenderDrawColor(renderTela, COR_PRETO);
 
-	desenharRetangulo(ESPACAMENTO + ESPACAMENTO, topo, (tamanho + 1) * LARGURA_BORDA + tamanho * k, LARGURA_BORDA);
+	float L = (tamanho + 1) * LARGURA_BORDA + tamanho * k;
+
+	desenharRetangulo(x - (L * offset), topo, L, LARGURA_BORDA);
 
 	topo += LARGURA_BORDA;
 
@@ -179,33 +188,35 @@ void desenharLetras(std::string letras, float tamanhoFonte, int &topo) {
 
 		letra += letras[i];
 
-		int x = ESPACAMENTO + ESPACAMENTO + i * LARGURA_BORDA + i * k;
+		float X = x + (i * LARGURA_BORDA + i * k) - (L * offset);
 
-		desenharRetangulo(x, topo, LARGURA_BORDA, k);
+		desenharRetangulo(X, topo, LARGURA_BORDA, k);
 
-		if (i < tamanho) {
-			escreverTexto(MEIO, letra, fonteMedia, x + LARGURA_BORDA + (k / 2), topo + (k - tamanhoFonte) / 2);
+		if (i < letras.length()) {
+			escreverTexto(MEIO, letra, fonteMedia, X + LARGURA_BORDA + (k / 2), topo + (k - tamanhoFonte) / 2);
 		}
 	}
 
 	topo += k;
 
-	desenharRetangulo(ESPACAMENTO + ESPACAMENTO, topo, (tamanho + 1) * LARGURA_BORDA + tamanho * k, LARGURA_BORDA);
+	desenharRetangulo(x - (L * offset), topo, L, LARGURA_BORDA);
 
 	topo += LARGURA_BORDA;
+
+	return L;
 }
 
-void menuJogar(bool &rodando) {
+std::string menuDicionario(bool &rodando) {
 	SDL_Event evento;
 
-	bool rodandoJogar = true;
+	bool rodandoDicionario = true;
 
-	while (rodandoJogar) {
+	while (rodandoDicionario) {
 		mouseApertado = false;
 
 		while (SDL_PollEvent(&evento)) {
 			if (evento.type == SDL_EVENT_QUIT) {
-				rodandoJogar = false;
+				rodandoDicionario = false;
 				rodando = false;
 			} else if (evento.type == SDL_EVENT_MOUSE_MOTION) {
 				SDL_GetMouseState(&mouseX, &mouseY);
@@ -217,40 +228,224 @@ void menuJogar(bool &rodando) {
 		SDL_GetWindowSize(janela, &larguraTela, &alturaTela);
 
 		limparTela();
+	}
 
-		int topo = 0;
-		int base = alturaTela;
+	return "./palavras/verbos.txt";
+}
 
-		desenharTitulos(topo, base);
+std::string getLetra(int code) {
+	if (code == SDL_SCANCODE_A) return "A";
+	if (code == SDL_SCANCODE_B) return "B";
+	if (code == SDL_SCANCODE_C) return "C";
+	if (code == SDL_SCANCODE_D) return "D";
+	if (code == SDL_SCANCODE_E) return "E";
+	if (code == SDL_SCANCODE_F) return "F";
+	if (code == SDL_SCANCODE_G) return "G";
+	if (code == SDL_SCANCODE_H) return "H";
+	if (code == SDL_SCANCODE_I) return "I";
+	if (code == SDL_SCANCODE_J) return "J";
+	if (code == SDL_SCANCODE_K) return "K";
+	if (code == SDL_SCANCODE_L) return "L";
+	if (code == SDL_SCANCODE_M) return "M";
+	if (code == SDL_SCANCODE_N) return "N";
+	if (code == SDL_SCANCODE_O) return "O";
+	if (code == SDL_SCANCODE_P) return "P";
+	if (code == SDL_SCANCODE_Q) return "Q";
+	if (code == SDL_SCANCODE_R) return "R";
+	if (code == SDL_SCANCODE_S) return "S";
+	if (code == SDL_SCANCODE_T) return "T";
+	if (code == SDL_SCANCODE_U) return "U";
+	if (code == SDL_SCANCODE_V) return "V";
+	if (code == SDL_SCANCODE_W) return "W";
+	if (code == SDL_SCANCODE_X) return "X";
+	if (code == SDL_SCANCODE_Y) return "Y";
+	if (code == SDL_SCANCODE_Z) return "Z";
 
-		escreverTexto(ESQUERDA, "Nível 1", fonteMedia, ESPACAMENTO + ESPACAMENTO, topo);
-		
-		escreverTexto(DIREITA, "TEMPO 00:00:00", fonteMedia, larguraTela - (ESPACAMENTO + ESPACAMENTO), topo);
+	return "";
+}
 
-		topo += FONTE_MEDIA + ESPACAMENTO;
+void menuJogar(bool &rodando, std::string dicionario) {
+	SDL_Event evento;
 
-		// std::string abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		std::string abc = "ABCDEFGHIJ";
+	TPilha palavrasOriginais = lerPalavras(dicionario, 6);
+	TPilha palavras = lerPalavras(dicionario, 6);
 
-		desenharLetras(abc, FONTE_MEDIA, topo);
+	TPilha historico = criarPilha();
 
-		topo += ESPACAMENTO;
+	TInfo item;
 
-		desenharLetras("PRESEPADA ", FONTE_MEDIA, topo);
+	int nivel = 1;
+	int pontos = 0;
 
-		base -= FONTE_GRANDE + ESPACAMENTO + ESPACAMENTO + ESPACAMENTO;
+	std::string palavraSignificado = "";
+	std::string significado = "Alguma Porra Muito Maluca.";
 
-		bool mouseDentro = false;
+	bool rodandoJogar = true;
 
-		desenharBotao(DIREITA, "Voltar", fonteGrande, larguraTela - ESPACAMENTO - ESPACAMENTO, base, ESPACAMENTO, FONTE_GRANDE, mouseDentro);
+	while (rodandoJogar) {
+		long long inicio = getAgora();
 
-		if (mouseDentro && mouseApertado) {
-			mouseApertado = false;
+		TInfo sorteada = pegarItem(palavras, inteiroAleatorio(0, palavras.quantidade), true);
 
-			rodandoJogar = false;
+		std::string embaralhada = embaralharPalavra(sorteada.palavra);
+
+		if (sorteada.palavra == "") {
+			break;
 		}
 
-		SDL_RenderPresent(renderTela);
+		std::string digitada = "";
+
+		bool rodandoPalavra = true;
+
+		while (rodandoPalavra) {
+			mouseApertado = false;
+
+			while (SDL_PollEvent(&evento)) {
+				if (evento.type == SDL_EVENT_QUIT) {
+					rodandoPalavra = false;
+					rodandoJogar = false;
+					rodando = false;
+				} else if (evento.type == SDL_EVENT_MOUSE_MOTION) {
+					SDL_GetMouseState(&mouseX, &mouseY);
+				} else if (evento.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+					mouseApertado = true;
+				} else if (evento.type == SDL_EVENT_KEY_DOWN) {
+					if (evento.key.scancode == SDL_SCANCODE_BACKSPACE) {
+						if (digitada.length() > 0) {
+							digitada = digitada.substr(0, digitada.length() - 1);
+						}
+					} else if (evento.key.scancode == SDL_SCANCODE_RETURN) {
+						if (digitada == sorteada.palavra) {
+							nivel += 1;
+
+							pontos += MAX_PONTOS;
+
+							rodandoPalavra = false;
+
+							palavraSignificado = digitada;
+						} else if (verificarPalavra(palavrasOriginais, digitada) && !verificarPalavra(historico, digitada) && verificarLetras(embaralhada, digitada)) {
+							pontos += inteiroAleatorio(MIN_PONTOS, MAX_PONTOS); 
+
+							item.palavra = digitada;
+
+							adicionarItem(historico, item);
+
+							palavraSignificado = digitada;
+
+							digitada = "";
+						}
+					} else {
+						if (digitada.length() < sorteada.palavra.length()) {
+							digitada += getLetra(evento.key.scancode);
+						}
+					}
+				}
+			}
+
+			SDL_GetWindowSize(janela, &larguraTela, &alturaTela);
+
+			limparTela();
+
+			if ((getAgora() - inicio) > 1000 * 60) {
+				rodandoPalavra = false;
+
+				palavraSignificado = sorteada.palavra;
+			}
+
+			float topo = 0;
+			float base = alturaTela;
+			float esquerda = 0;
+			float direita = larguraTela;
+
+			desenharTitulos(topo, base);
+
+			bool mouseDentro = false;
+
+			direita -= ESPACAMENTO + ESPACAMENTO;
+
+			base -= ESPACAMENTO + LARGURA_BORDA + FONTE_GRANDE + ESPACAMENTO + ESPACAMENTO;
+
+			desenharBotao(DIREITA, "Voltar", fonteGrande, direita, base, ESPACAMENTO, FONTE_GRANDE, mouseDentro);
+
+			if (mouseDentro && mouseApertado) {
+				mouseApertado = false;
+
+				rodandoPalavra = false;
+				rodandoJogar = false;
+			}
+
+			base = alturaTela - ESPACAMENTO - LARGURA_BORDA - FONTE_MEDIA - ESPACAMENTO;
+
+			esquerda += ESPACAMENTO + ESPACAMENTO;
+
+			if (palavraSignificado.length() > 0) {
+				escreverTexto(ESQUERDA, significado, fonteMedia, esquerda, base);
+
+				base -= LARGURA_BORDA + (FONTE_MEDIA * 1.6) + LARGURA_BORDA + ESPACAMENTO;
+
+				desenharLetras(ESQUERDA, palavraSignificado, palavraSignificado.length(), FONTE_MEDIA, esquerda, base);
+			}
+
+			escreverTexto(ESQUERDA, "Histórico " + std::to_string(historico.quantidade), fonteMedia, esquerda, topo);
+
+			float coluna = (direita - esquerda) / 4;
+
+			float topo2 = topo + FONTE_MEDIA + ESPACAMENTO;
+
+			TPilha historico2 = criarPilha();
+
+			float esquerda2 = esquerda;
+
+			while (!pilhaVazia(historico)) {
+				item = pegarItem(historico);
+
+				adicionarItem(historico2, item);
+
+				removerItem(historico);
+
+				esquerda2 = std::max(esquerda2, esquerda + desenharLetras(ESQUERDA, item.palavra, item.palavra.length(), FONTE_MEDIA, esquerda, topo2));
+
+				topo2 += ESPACAMENTO;
+
+				if (topo2 >= base) break;
+			}
+
+			while (!pilhaVazia(historico2)) {
+				adicionarItem(historico, pegarItem(historico2));
+
+				removerItem(historico2);
+			}
+
+			deletarPilha(historico2);
+
+			esquerda = std::max((float) (ESPACAMENTO + ESPACAMENTO + coluna), esquerda2);
+
+			esquerda += ESPACAMENTO + ESPACAMENTO;
+
+			float esquerda3 = esquerda;
+
+			esquerda3 += escreverTexto(ESQUERDA, "Nível " + std::to_string(nivel), fonteMedia, esquerda3, topo);
+
+			esquerda3 += ESPACAMENTO + ESPACAMENTO;
+
+			esquerda3 += escreverTexto(ESQUERDA, "Pontos " + std::to_string(pontos), fonteMedia, esquerda3, topo);
+
+			escreverTexto(DIREITA, "Tempo " + formatarTempo(getAgora() - inicio), fonteMedia, direita, topo);
+
+			topo += FONTE_MEDIA + ESPACAMENTO;
+
+			desenharLetras(ESQUERDA, embaralhada, embaralhada.length(), FONTE_MEDIA, esquerda, topo);
+
+			topo += ESPACAMENTO;
+
+			desenharLetras(ESQUERDA, digitada, embaralhada.length(), FONTE_MEDIA, esquerda, topo);
+
+			SDL_RenderPresent(renderTela);
+		}
+
+		while (!pilhaVazia(historico)) {
+			removerItem(historico);
+		}
 	}
 }
 
@@ -277,8 +472,8 @@ void menuAjuda(bool &rodando) {
 
 		limparTela();
 
-		int topo = 0;
-		int base = alturaTela;
+		float topo = 0;
+		float base = alturaTela;
 
 		desenharTitulos(topo, base);
 
@@ -287,7 +482,7 @@ void menuAjuda(bool &rodando) {
 		topo += FONTE_MEDIA + ESPACAMENTO;
 
 		escreverTexto(ESQUERDA, "Ensinar Novas Palavras em Português ou Inglês e Seus Significados ao Jogador.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
-		
+	
 		topo += FONTE_PEQUENA + ESPACAMENTO + ESPACAMENTO;
 
 		escreverTexto(ESQUERDA, "Como Jogar", fonteMedia, ESPACAMENTO + ESPACAMENTO, topo);
@@ -299,7 +494,7 @@ void menuAjuda(bool &rodando) {
 		topo += FONTE_PEQUENA + ESPACAMENTO;
 
 		escreverTexto(ESQUERDA, "Use ENTER para Submeter a Palavra Digitada.", fontePequena, ESPACAMENTO + ESPACAMENTO, topo);
-		
+
 		topo += FONTE_PEQUENA + ESPACAMENTO;
 
 		base -= FONTE_GRANDE + ESPACAMENTO + ESPACAMENTO + ESPACAMENTO;
@@ -338,10 +533,6 @@ int main() {
 
 	bool rodando = true;
 
-	menuJogar(rodando);
-
-	return 1;
-
 	while (rodando) {
 		mouseApertado = false;
 
@@ -359,8 +550,8 @@ int main() {
 
 		limparTela();
 
-		int topo = 0;
-		int base = alturaTela;
+		float topo = 0;
+		float base = alturaTela;
 
 		desenharTitulos(topo, base);
 
@@ -379,7 +570,11 @@ int main() {
 				limparTela();
 
 				if (i == 0) {
-					menuJogar(rodando);
+					std::string dicionario = menuDicionario(rodando);
+
+					if (dicionario != "") {
+						menuJogar(rodando, dicionario);
+					}
 				} else if (i == 1) {
 					menuAjuda(rodando);
 				} else if (i == 2) {

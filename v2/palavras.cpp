@@ -109,7 +109,7 @@ void deletarPilha(TPilha& pilha) {
 	delete pilha.primeiro;
 }
 
-TPilha lerPalavras(std::string caminho) {
+TPilha lerPalavras(std::string caminho, int maximoLetras) {
 	TPilha pilha = criarPilha();
 
 	std::ifstream arquivo;
@@ -128,9 +128,11 @@ TPilha lerPalavras(std::string caminho) {
 	while (getline(arquivo, item.palavra)) {
 		// if (pilha.quantidade < 3) adicionarItem(pilha, item);
 
-		if (item.palavra.length() <= 5) {
-			adicionarItem(pilha, item);
-		}
+		paraMaiuscula(item.palavra);
+
+		if (maximoLetras != 0 && item.palavra.length() > maximoLetras) continue; 
+
+		adicionarItem(pilha, item);
 	}
 
 	arquivo.close();

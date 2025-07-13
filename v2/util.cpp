@@ -5,11 +5,19 @@
 // std::random_device device;
 // std::mt19937 seed(device());
 
-std::mt19937 seed(std::chrono::system_clock::now().time_since_epoch().count());
+std::mt19937 seed(getAgora());
 std::uniform_real_distribution<> generate(0.0, 1.0);
 
 int inteiroAleatorio(int min, int max) {
 	return (max - min) * generate(seed) + min;
+}
+
+void paraMaiuscula(std::string& palavra) {
+	int tamanho = palavra.length();
+
+	for (int i = 0; i < tamanho; i++) {
+		palavra[i] = std::toupper(palavra[i]);
+	}
 }
 
 void paraMinuscula(std::string& palavra) {
@@ -67,4 +75,36 @@ std::string embaralharPalavra(std::string palavra) {
 	}
 
 	return palavra;
+}
+
+long long getAgora() {
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+}
+
+std::string formatarNumero(int numero, int tamanho) {
+	std::string resultado = std::to_string(numero);
+
+	while (resultado.length() < tamanho) {
+		resultado = "0" + resultado;
+	}
+
+	return resultado;
+}
+
+std::string formatarTempo(long long tempo) {
+	int S = 1000;
+	int M = S * 60;
+	int H = M * 60;
+
+	int h = tempo / H;
+
+	tempo -= (h * H);
+
+	int m = tempo / M;
+	
+	tempo -= (m * M);
+
+	int s = tempo / S;
+
+	return formatarNumero(h, 2) + ":" + formatarNumero(m, 2) + ":" + formatarNumero(s, 2);
 }
