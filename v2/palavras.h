@@ -39,7 +39,5 @@
 
 	void imprimirPalavras(TPilha& pilha);
 
-	std::string embaralharPalavra(std::string palavra);
-
 	bool verificarPalavra(TPilha& pilha, std::string palavra);
 #endif

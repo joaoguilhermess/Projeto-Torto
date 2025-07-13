@@ -56,3 +56,15 @@ bool verificarLetras(std::string palavra, std::string palavra2) {
 
 	return true;
 }
+
+std::string embaralharPalavra(std::string palavra) {
+	int tamanho = palavra.length();
+
+	for (int i = 0; i < tamanho - 1; i++) {
+		int index = inteiroAleatorio(i + 1, tamanho);
+
+		palavra = palavra.substr(index, 1) + palavra.substr(0, index) + palavra.substr(index + 1);
+	}
+
+	return palavra;
+}

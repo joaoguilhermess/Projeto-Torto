@@ -162,18 +162,6 @@ void imprimirPalavras(TPilha& pilha) {
 	std::cout << "\n";
 }
 
-std::string embaralharPalavra(std::string palavra) {
-	int tamanho = palavra.length();
-
-	for (int i = 0; i < tamanho - 1; i++) {
-		int index = inteiroAleatorio(i + 1, tamanho);
-
-		palavra = palavra.substr(index, 1) + palavra.substr(0, index) + palavra.substr(index + 1);
-	}
-
-	return palavra;
-}
-
 bool verificarPalavra(TPilha& pilha, std::string palavra) {
 	TPilha pilha2 = criarPilha();
 

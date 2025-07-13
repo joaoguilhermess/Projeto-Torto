@@ -12,4 +12,6 @@
 	void formatarPalavra(std::string& palavra);
 
 	bool verificarLetras(std::string palavra, std::string palavra2);
+
+	std::string embaralharPalavra(std::string palavra);
 #endif
