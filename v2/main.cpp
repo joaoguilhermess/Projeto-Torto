@@ -109,8 +109,8 @@ float desenharBotao(float offset, std::string conteudo, TTF_Font* fonte, float x
 bool iniciarSDL() {
 	if (!SDL_Init(SDL_INIT_VIDEO) || !TTF_Init()) return false;
 
-	// janela = SDL_CreateWindow("Jogo Torto", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_FULLSCREEN);
-	janela = SDL_CreateWindow("Jogo Torto", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
+	janela = SDL_CreateWindow("Jogo Torto", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED | SDL_WINDOW_FULLSCREEN);
+	// janela = SDL_CreateWindow("Jogo Torto", 800, 600, SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED);
 	renderTela = SDL_CreateRenderer(janela, NULL);
 	renderTexto = TTF_CreateRendererTextEngine(renderTela);
 
@@ -356,12 +356,12 @@ void menuJogar(bool &rodando, std::string dicionario) {
 				rodandoJogar = false;
 			}
 
-			base = alturaTela - ESPACAMENTO - LARGURA_BORDA - FONTE_MEDIA - ESPACAMENTO;
-
 			esquerda += ESPACAMENTO + ESPACAMENTO;
 
 			if (palavraSignificado.length() > 0) {
-				escreverTexto(ESQUERDA, significado, fonteMedia, esquerda, base);
+				base = alturaTela - ESPACAMENTO - LARGURA_BORDA - FONTE_PEQUENA - ESPACAMENTO;
+				
+				escreverTexto(ESQUERDA, significado, fontePequena, esquerda, base);
 
 				base -= LARGURA_BORDA + (FONTE_MEDIA * 1.6) + LARGURA_BORDA + ESPACAMENTO;
 
