@@ -49,6 +49,7 @@ TInfo pegarItem(TPilha& pilha) {
 	TInfo item;
 
 	item.palavra = "";
+	item.significado = "";
 
 	return item;
 }
@@ -59,6 +60,7 @@ TInfo pegarItem(TPilha& pilha, int index, bool remover) {
 	TInfo item;
 
 	item.palavra = "";
+	item.significado = "";
 
 	if (index >= 0 && index < pilha.quantidade) {
 		while (pilha.quantidade - 1 > index) {
@@ -78,6 +80,37 @@ TInfo pegarItem(TPilha& pilha, int index, bool remover) {
 
 			removerItem(pilha2);
 		}
+	}
+
+	deletarPilha(pilha2);
+
+	return item;
+}
+
+TInfo pegarItem(TPilha& pilha, std::string palavra) {
+	TPilha pilha2 = criarPilha();
+
+	TInfo item;
+
+	item.palavra = "";
+	item.significado = "";
+
+	while (!pilhaVazia(pilha)) {
+		item = pegarItem(pilha);
+
+		if (item.palavra == palavra) {
+			break;
+		}
+
+		adicionarItem(pilha2, item);
+
+		removerItem(pilha);
+	}
+
+	while (!pilhaVazia(pilha2)) {
+		adicionarItem(pilha, pegarItem(pilha2));
+
+		removerItem(pilha2);
 	}
 
 	deletarPilha(pilha2);
@@ -125,12 +158,16 @@ TPilha lerPalavras(std::string caminho, int maximoLetras) {
 
 	TInfo item;
 
-	while (getline(arquivo, item.palavra)) {
+	while (true) {
+		if (!getline(arquivo, item.palavra)) break;
+		if (!getline(arquivo, item.significado)) break;
+
 		// if (pilha.quantidade < 3) adicionarItem(pilha, item);
 
 		paraMaiuscula(item.palavra);
 
 		if (maximoLetras != 0 && item.palavra.length() > maximoLetras) continue; 
+		if (item.palavra.length() < 3) continue;
 
 		adicionarItem(pilha, item);
 	}
@@ -167,20 +204,20 @@ void imprimirPalavras(TPilha& pilha) {
 bool verificarPalavra(TPilha& pilha, std::string palavra) {
 	TPilha pilha2 = criarPilha();
 
-	TInfo item2;
+	TInfo item;
 
 	bool resultado = false;
 
 	while (!pilhaVazia(pilha)) {
-		item2 = pegarItem(pilha);
+		item = pegarItem(pilha);
 
-		if (item2.palavra == palavra) {
+		if (item.palavra == palavra) {
 			resultado = true;
 
 			break;
 		}
 
-		adicionarItem(pilha2, item2);
+		adicionarItem(pilha2, item);
 
 		removerItem(pilha);
 	}
@@ -191,7 +228,7 @@ bool verificarPalavra(TPilha& pilha, std::string palavra) {
 		removerItem(pilha2);
 	}
 
-	deletarPilha(pilha2);	
+	deletarPilha(pilha2);
 
 	return resultado;
 }

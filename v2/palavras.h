@@ -32,6 +32,8 @@
 
 	TInfo pegarItem(TPilha& pilha, int index, bool remover);
 
+	TInfo pegarItem(TPilha& pilha, std::string palavra);
+
 	void removerItem(TPilha& pilha);
 
 	void deletarPilha(TPilha& pilha);

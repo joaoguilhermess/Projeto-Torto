@@ -253,7 +253,7 @@ void menuJogar(bool &rodando, std::string dicionario) {
 	int pontos = 0;
 
 	std::string palavraSignificado = "";
-	std::string significado = "Alguma Porra Muito Maluca.";
+	std::string significado = "";
 
 	bool rodandoJogar = true;
 
@@ -297,15 +297,21 @@ void menuJogar(bool &rodando, std::string dicionario) {
 
 							rodandoPalavra = false;
 
-							palavraSignificado = digitada;
+							item = pegarItem(palavrasOriginais, digitada);
+
+							palavraSignificado = item.palavra;
+							significado = item.significado;
 						} else if (verificarPalavra(palavrasOriginais, digitada) && !verificarPalavra(historico, digitada) && verificarLetras(embaralhada, digitada)) {
 							pontos += inteiroAleatorio(MIN_PONTOS, MAX_PONTOS); 
 
-							item.palavra = digitada;
+							item = pegarItem(palavrasOriginais, digitada);
+
+							// item.palavra = digitada;
 
 							adicionarItem(historico, item);
 
-							palavraSignificado = digitada;
+							palavraSignificado = item.palavra;
+							significado = item.significado;
 
 							digitada = "";
 						}
@@ -325,6 +331,7 @@ void menuJogar(bool &rodando, std::string dicionario) {
 				rodandoPalavra = false;
 
 				palavraSignificado = sorteada.palavra;
+				significado = sorteada.significado;
 			}
 
 			float topo = 0;
